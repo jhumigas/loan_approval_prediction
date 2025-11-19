@@ -1,0 +1,52 @@
+[project]
+name = "loan-approval-prediction"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "David M.", email = "10966271+jhumigas@users.noreply.github.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi[standard]>=0.121.2",
+    "loguru>=0.7.3",
+    "marimo>=0.17.8",
+    "pandas>=2.3.3",
+    "polars>=1.35.2",
+    "pydantic>=2.12.4",
+    "pydantic-settings>=2.12.0",
+    "scikit-learn>=1.7.2",
+    "seaborn>=0.13.2",
+]
+
+[project.scripts]
+loan-approval-prediction = "loan_approval_prediction:main"
+
+[build-system]
+requires = ["uv_build>=0.9.5,<0.10.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "detect-secrets>=1.5.0",
+    "pre-commit>=4.4.0",
+    "pytest>=9.0.1",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.14.5",
+    "safety>=3.7.0",
+]
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv"]
+tests = ["B201", "B301"]
+skips = ["B101", "B601"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = [
+    "tests"
+]
+
+[tool.coverage.run]
+source=["src/loan_approval_prediction/*"]
+omit=["tests/*",".venv/*", "notebooks"]
