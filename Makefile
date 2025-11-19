@@ -51,5 +51,25 @@ unit-tests:  ## run unit tests
 	uv run pytest tests/unit
 
 .PHONY: start-dev-fast-app
-start-dev-fast-app: ## start dev mode
+start-app: ## start fastapi app in dev mode
 	uv run fastapi dev src/loan_approval_prediction/serve.py
+
+.PHONY: train-model
+train-model: ## train model
+	uv run python scripts/train.py
+
+.PHONY: test-predict
+test-predict: ## test model prediction
+	uv run python scripts/predict.py --input data/sample/sample.json
+
+.PHONY:
+docker-build: ## build docker image
+	docker build -t loan-approval-image .
+
+.PHONY: docker-run
+docker-run: ## run docker container
+	docker run -d -p 9696:8000 --name loan-approval-container loan-approval-image
+
+.PHONY: docker-stop
+docker-stop: ## stop docker container
+	docker stop loan-approval-container && docker rm loan-approval-container

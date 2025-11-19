@@ -1,0 +1,32 @@
+project_name: loan_approval_prediction
+
+data_path: data/raw/loan_approval.csv
+
+data_config:
+  numerical_columns:
+    - income
+    - credit_score
+    - loan_amount
+    - years_employed
+    - points
+  categorical_columns:
+    - name
+    - city
+  target_column: loan_approved
+
+random_seed: 42
+
+model_path: models/model.bin
+
+model_parameters:
+  random_seed: 42
+  C: 1.00
+  max_iter: 1000
+  solver: liblinear
+
+evaluation_config:
+  random_seed: 42
+  val_ratio: 0.2
+  test_ratio: 0.2
+  cv_n_splits: 5
+  evaluation_metric: roc_auc_score

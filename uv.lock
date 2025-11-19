@@ -720,6 +720,7 @@ dependencies = [
     { name = "polars" },
     { name = "pydantic" },
     { name = "pydantic-settings" },
+    { name = "pyyaml" },
     { name = "scikit-learn" },
     { name = "seaborn" },
 ]
@@ -743,6 +744,7 @@ requires-dist = [
     { name = "polars", specifier = ">=1.35.2" },
     { name = "pydantic", specifier = ">=2.12.4" },
     { name = "pydantic-settings", specifier = ">=2.12.0" },
+    { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "scikit-learn", specifier = ">=1.7.2" },
     { name = "seaborn", specifier = ">=0.13.2" },
 ]

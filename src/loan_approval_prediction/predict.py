@@ -1,8 +1,7 @@
-# TODO: loads model, runs inference
+import argparse
 import pickle
 from loguru import logger
 from loan_approval_prediction.config import ProjectConfig
-import sklearn
 import polars as pl
 
 
@@ -23,19 +22,18 @@ def predict_proba(model, input_data: dict):
 
 
 if __name__ == "__main__":
-    config = ProjectConfig()
-    model_path = f"{config.model_dir}/model.pkl"
+    config = ProjectConfig.from_yaml("config.yml")
 
-    model = load_model(model_path)
+    model = load_model(config.model_path)
 
-    # Example input data for prediction
-    sample_input = {
-        "income": 62098,
-        "credit_score": 689,
-        "loan_amount": 19217,
-        "years_employed": 29,
-        "points": 65,
-    }
+    argparser = argparse.ArgumentParser(
+        description="Run inference on sample input data."
+    )
+    argparser.add_argument(
+        "--input", type=str, required=True, help="Path to the input JSON file."
+    )
+    args = argparser.parse_args()
+    sample_input = pl.read_json(args.input).to_dicts()[0]
 
     prediction = predict_proba(model, sample_input)
     logger.info(f"Prediction result: {prediction}")

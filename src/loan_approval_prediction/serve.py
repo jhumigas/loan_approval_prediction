@@ -3,13 +3,12 @@ from loguru import logger
 from pydantic import BaseModel
 from loan_approval_prediction.config import ProjectConfig
 from loan_approval_prediction import predict
-from pathlib import Path
 
 app = FastAPI()
 logger.info("Loan Approval Prediction Service is starting up.")
-config = ProjectConfig()
+config = ProjectConfig.from_yaml("config.yml")
 
-model = predict.load_model(Path(config.model_dir) / config.model_file)
+model = predict.load_model(config.model_path)
 
 
 class LoanApprovalRequest(BaseModel):
@@ -18,7 +17,6 @@ class LoanApprovalRequest(BaseModel):
     loan_amount: float
     years_employed: int
     points: float
-    # Add all necessary features here
 
 
 @app.get("/")
@@ -30,6 +28,9 @@ def read_root():
 def predict_loan_approval(data: LoanApprovalRequest):
     logger.info(f"Received data for prediction: {data.model_dump()}")
     proba_prediction = predict.predict_proba(model, data.model_dump())
-    result = {"loan_approval_probability": proba_prediction[0, 1]}
+    result = {
+        "is_approved": bool(proba_prediction[0, 1] >= 0.5),
+        "loan_approval_probability": round(proba_prediction[0, 1], 2),
+    }
     logger.info(f"Prediction result: {result}")
     return result

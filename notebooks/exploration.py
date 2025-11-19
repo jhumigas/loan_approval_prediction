@@ -25,7 +25,7 @@ def _(mo):
 
 @app.cell
 def _(pl):
-    data_path = "./data/dataset/loan_approval.csv"
+    data_path = "./data/raw/loan_approval.csv"
     raw_data = pl.read_csv(data_path)
     raw_data
     return (raw_data,)
@@ -156,13 +156,16 @@ def _(
     x_train, y_train = clean_dataset(x_raw_train, y_raw_train, num_cols)
     x_val, y_val = clean_dataset(x_raw_val, y_raw_val, num_cols)
     x_test, y_test = clean_dataset(x_raw_test, y_raw_test, num_cols)
-    return x_train, y_train
+    return x_train, x_val, y_train, y_val
 
 
 @app.cell
 def _(mo):
     mo.md(r"""
     ## Model Evaluation
+
+    * Fit model on full train set, evaluate on validation set
+    * Cross Validation
     """)
     return
 
@@ -175,7 +178,7 @@ def _(x_train, y_train):
         solver="liblinear", C=1.0, max_iter=1000, random_state=42
     )
     model_logistic_regression.fit(X=x_train, y=y_train)
-    return (model_logistic_regression,)
+    return LogisticRegression, model_logistic_regression
 
 
 @app.cell
@@ -188,13 +191,90 @@ def _(model_logistic_regression, x_train, y_train):
         classification_report,
     )
 
-    y_pred_train = model_logistic_regression.predict(x_train)
-    train_classification_report = classification_report(y_train, y_pred_train)
-    print(f"Accuracy score on train set: {accuracy_score(y_train, y_pred_train):.2f}")
-    print(f"ROC AUC score on train set: {roc_auc_score(y_train, y_pred_train):.2f}")
-    print(f"Precision score on train set: {precision_score(y_train, y_pred_train):.2f}")
-    print(f"Recall score on train set: {recall_score(y_train, y_pred_train):.2f}")
-    print(train_classification_report)
+    def evaluate_model(model, x, y):
+        y_pred = model_logistic_regression.predict(x)
+        train_classification_report = classification_report(y, y_pred)
+        print(f"Accuracy score: {accuracy_score(y, y_pred):.2f}")
+        print(f"ROC AUC score: {roc_auc_score(y, y_pred):.2f}")
+        print(f"Precision score: {precision_score(y, y_pred):.2f}")
+        print(f"Recall score: {recall_score(y, y_pred):.2f}")
+        print(train_classification_report)
+        return train_classification_report
+
+    evaluate_model(model_logistic_regression, x_train, y_train)
+    return evaluate_model, roc_auc_score
+
+
+@app.cell
+def _(evaluate_model, model_logistic_regression, x_val, y_val):
+    evaluate_model(model_logistic_regression, x_val, y_val)
+    return
+
+
+@app.cell
+def _(LogisticRegression, roc_auc_score, x_train, x_val, y_train, y_val):
+    from sklearn.model_selection import KFold
+    import numpy as np
+
+    full_train_X = np.concat([x_train.to_numpy(), x_val.to_numpy()])
+    full_train_y = np.concat([y_train, y_val])
+
+    def roc_scores_eval(full_train_X, full_train_y, C=1.0):
+        kf = KFold(n_splits=5, shuffle=True, random_state=1)
+        roc_scoreskf = []
+        for i, (train_index, test_index) in enumerate(
+            kf.split(full_train_X, full_train_y)
+        ):
+            x_train_kf, y_train_kf = (
+                full_train_X[train_index],
+                full_train_y[train_index],
+            )
+            x_val_kf, y_val_kf = full_train_X[test_index], full_train_y[test_index]
+            model_kf = LogisticRegression(solver="liblinear", C=C, max_iter=1000)
+            model_kf.fit(x_train_kf, y_train_kf)
+            y_val_proba_pred_kf = model_kf.predict_proba(x_val_kf)[:, 1]
+            roc_scoreskf.append(roc_auc_score(y_val_kf, y_val_proba_pred_kf))
+            del model_kf
+        return np.std(roc_scoreskf), round(np.mean(roc_scoreskf), 3)
+
+    roc_scores_eval(full_train_X, full_train_y)
+    return full_train_X, full_train_y
+
+
+@app.cell
+def _(mo):
+    mo.md(r"""
+    ## Hyperparamater tuning
+    """)
+    return
+
+
+@app.cell
+def _(LogisticRegression, full_train_X, full_train_y):
+    from sklearn.model_selection import GridSearchCV
+
+    parameters = {"C": [0.01, 1, 10], "max_iter": [1000], "solver": ["liblinear"]}
+    model_logistic_regression_gs = LogisticRegression()
+    clf = GridSearchCV(model_logistic_regression_gs, parameters)
+    clf.fit(full_train_X, full_train_y)
+    return (clf,)
+
+
+@app.cell
+def _(clf, evaluate_model, x_train, y_train):
+    evaluate_model(clf, x_train, y_train)
+    return
+
+
+@app.cell
+def _(clf, evaluate_model, x_val, y_val):
+    evaluate_model(clf, x_val, y_val)
+    return
+
+
+@app.cell
+def _(clf):
+    clf
     return
 
 
