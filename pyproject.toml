@@ -9,8 +9,10 @@ authors = [
 requires-python = ">=3.13"
 dependencies = [
     "fastapi[standard]>=0.121.2",
+    "ipykernel>=7.1.0",
     "loguru>=0.7.3",
     "marimo>=0.17.8",
+    "nbformat>=5.10.4",
     "pandas>=2.3.3",
     "polars>=1.35.2",
     "pydantic>=2.12.4",

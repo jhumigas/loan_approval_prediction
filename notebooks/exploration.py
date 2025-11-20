@@ -11,7 +11,6 @@ def _():
     import sklearn
     import seaborn as sns
     from sklearn.metrics import mutual_info_score
-
     return mo, pl, sklearn, sns
 
 
@@ -104,7 +103,7 @@ def _(mo):
 
 @app.cell
 def _(pl, raw_data, target_col):
-    def split_label(dataset: pl.dataframe, target_col: str):
+    def split_label(dataset: pl.DataFrame, target_col: str):
         return dataset.drop(target_col), dataset[target_col]
 
     full_x, full_y = split_label(raw_data, target_col=target_col)
@@ -113,7 +112,7 @@ def _(pl, raw_data, target_col):
 
 @app.cell
 def _(full_x, full_y, pl, sklearn):
-    def split_dataset(dataset: pl.dataframe, val_size=0.2, test_size=0.2, seed=1):
+    def split_dataset(dataset: pl.DataFrame, val_size=0.2, test_size=0.2, seed=1):
         train_size = 1 - test_size
         full_train_dataset, test_dataset = sklearn.model_selection.train_test_split(
             dataset, test_size=test_size, random_state=seed
@@ -287,13 +286,13 @@ def _(mo):
 
 
 @app.cell
-def _(model_logistic_regression):
+def _(clf):
     import pickle
 
     model_folder = "./models"
     model_name = "model_logistic_regression_C=1.0.bin"
     with open(f"{model_folder}/{model_name}", "wb") as f_out:
-        pickle.dump(model_logistic_regression, f_out)
+        pickle.dump(clf, f_out)
     return
 
 
