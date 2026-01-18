@@ -1,4 +1,4 @@
-# Loan Approval Prediction Project
+# Loan Approval Predictor
 
 ## 1. Problem Statement
 
@@ -89,9 +89,9 @@ Could also do:
 
 ```bash
 # Clone the repository
-git clone git@github.com:jhumigas/loan_approval_prediction.git
+git clone git@github.com:jhumigas/loan_approval_predictor.git
 
-cd loan-approval-prediction
+cd loan-approval-predictor
 
 # Dataset is already download in the repository
 
@@ -171,7 +171,7 @@ curl -X POST http://localhost:9696/predict \
 ## 8. Project Structure
 
 ```text
-loan-approval-prediction/
+loan-approval-predictor/
 │
 ├── data/
 |   ├── samples                # Sample data for local experimentations
@@ -185,7 +185,7 @@ loan-approval-prediction/
 │   └── predict.py             # Prediction script for local testing
 |
 ├── src
-│   └── loan_approval_prediction
+│   └── loan_approval_predictor
 │       ├── config.py          # Configuration module to load variables, parameters
 │       ├── predict.py         # Prediction module 
 │       ├── serve.py           # Fast API entrypoint 

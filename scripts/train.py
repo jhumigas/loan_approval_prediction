@@ -1,9 +1,9 @@
-from loan_approval_prediction import train
+from loan_approval_predictor import train
 from loguru import logger
 
 
 if __name__ == "__main__":
-    from loan_approval_prediction.config import ProjectConfig
+    from loan_approval_predictor.config import ProjectConfig
 
     config = ProjectConfig.from_yaml("config.yml")
 

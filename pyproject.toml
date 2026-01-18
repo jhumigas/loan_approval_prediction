@@ -1,5 +1,5 @@
 [project]
-name = "loan-approval-prediction"
+name = "loan-approval-predictor"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -23,7 +23,7 @@ dependencies = [
 ]
 
 [project.scripts]
-loan-approval-prediction = "loan_approval_prediction:main"
+loan-approval-predictor = "loan_approval_predictor:main"
 
 [build-system]
 requires = ["uv_build>=0.9.5,<0.10.0"]
@@ -51,5 +51,5 @@ testpaths = [
 ]
 
 [tool.coverage.run]
-source=["src/loan_approval_prediction/*"]
+source=["src/loan_approval_predictor/*"]
 omit=["tests/*",".venv/*", "notebooks"]

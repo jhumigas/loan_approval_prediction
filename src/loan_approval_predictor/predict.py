@@ -1,7 +1,7 @@
 import argparse
 import pickle
 from loguru import logger
-from loan_approval_prediction.config import ProjectConfig
+from loan_approval_predictor.config import ProjectConfig
 import polars as pl
 
 

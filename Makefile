@@ -1,5 +1,5 @@
 OUTPUT_DIR = .
-SRC_DIR = src/loan_approval_prediction
+SRC_DIR = src/loan_approval_predictor
 
 .PHONY: help
 help:
@@ -52,7 +52,7 @@ unit-tests:  ## run unit tests
 
 .PHONY: start-dev-fast-app
 start-app: ## start fastapi app in dev mode
-	uv run fastapi dev src/loan_approval_prediction/serve.py
+	uv run fastapi dev src/loan_approval_predictor/serve.py
 
 .PHONY: train-model
 train-model: ## train model

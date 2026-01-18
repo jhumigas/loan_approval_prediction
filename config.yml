@@ -1,4 +1,4 @@
-project_name: loan_approval_prediction
+project_name: loan_approval_predictor
 
 data_path: data/raw/loan_approval.csv
 

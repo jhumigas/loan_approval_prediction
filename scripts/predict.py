@@ -1,6 +1,6 @@
 import argparse
-from loan_approval_prediction.config import ProjectConfig
-from loan_approval_prediction import predict
+from loan_approval_predictor.config import ProjectConfig
+from loan_approval_predictor import predict
 import polars as pl
 from loguru import logger
 

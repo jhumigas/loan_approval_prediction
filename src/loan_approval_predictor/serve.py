@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from loguru import logger
 from pydantic import BaseModel
-from loan_approval_prediction.config import ProjectConfig
-from loan_approval_prediction import predict
+from loan_approval_predictor.config import ProjectConfig
+from loan_approval_predictor import predict
 
 app = FastAPI()
 logger.info("Loan Approval Prediction Service is starting up.")

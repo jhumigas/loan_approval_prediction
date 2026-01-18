@@ -902,7 +902,7 @@ wheels = [
 ]
 
 [[package]]
-name = "loan-approval-prediction"
+name = "loan-approval-predictor"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
